@@ -105,6 +105,9 @@
             width: max(100%, fit-content);
             overflow: auto;
         }
+        pre i {
+            opacity: 0.5;
+        }
 
         @media (prefers-color-scheme: dark) {
             #darkBtn {
@@ -138,22 +141,26 @@
             <p> Let me show you the important bits - the rest you can style yourself:</p>
             <h3>HTML</h3>
 <pre>
+<i>// create the toggle buttons with onclick function calls</i>
 &lt;button id="lightBtn" onclick="switchLight()"&gt;light&lt;/button&gt;
 &lt;button id="darkBtn" onclick="switchDark()"&gt;dark&lt;/button&gt;
 </pre>
             <h3>CSS</h3>
 <pre>
+<i>// set your page to automatically respond to OS settings
+// seriously, go play with the color-scheme property, it's ace!</i>
 html {
   color-scheme: light dark;
 }
 
+<i>// initial state on load, dark mode = no dark-mode button</i>
 @media (prefers-color-scheme: dark) {
   #darkBtn {
     display: none;
   }
 }
-@media (prefers-color-scheme: light),
-       (prefers-color-scheme: no-preference) {
+<i>// initial state on load, light mode = no light-mode button</i>
+@media (prefers-color-scheme: light) {
   #lightBtn {
     display: none;
   }
@@ -161,11 +168,13 @@ html {
 </pre>
             <h3>JS</h3>
 <pre>
+<i>// set color-scheme to dark and switch to light button</i>
 function switchDark() {
   document.querySelector("html").style.colorScheme = "dark";
   document.querySelector("#lightBtn").style.display = "initial";
   document.querySelector("#darkBtn").style.display = "none";
 }
+<i>// set color-scheme to light and switch to dark button</i>
 function switchLight() {
   document.querySelector("html").style.colorScheme = "light";
   document.querySelector("#darkBtn").style.display = "initial";
