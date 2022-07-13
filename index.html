@@ -20,21 +20,30 @@
         }
 
         .mode-switcher {
-            display: grid;
-            place-content: center;
-            width: fit-content;
         }   
         .mode-switcher button {
             border: 0;
             padding: 0.25rem;
             margin: 0.5vmin 0.25vmin;
             border-radius: 0.25rem;
-            font-size: 2rem;
+            font-size: 1.5rem;
             background-color: hsla(var(--medgrey) / 0.5);
         }
-        .mode-switcher button:hover {
-            transform: translate(1px, 1px);
+        .mode-switcher #lightBtn {
+            box-shadow: 1px 1px 5px -1px CanvasText inset;
+        }
+        .mode-switcher #darkBtn {
+            box-shadow: 1px 1px 5px -1px Canvas inset;
+        }
+        .mode-switcher :is(#darkBtn, #lightBtn):hover {
+            /* transform: translate(1px, 1px); */
             background-color: hsla(var(--medgrey) / 1);
+        }
+        .mode-switcher #lightBtn:active {
+            box-shadow: 1px 1px 5px -1px Canvas inset;
+        }
+        .mode-switcher #darkBtn:active {
+            box-shadow: 1px 1px 5px -1px CanvasText inset;
         }
 
         header {
@@ -43,6 +52,7 @@
             z-index: 1;
             border-bottom: 1px solid hsla(var(--medgrey) / 0.25);
             place-content: space-around;
+            place-items: center;
         }
         header, footer {
             background-color: Canvas;
@@ -131,16 +141,6 @@
         .dark-mode .mode-styling::after { content: " light mode" }
         .dark-mode div.mode-styling::after { content: " dark mode" }
 
-        @media (prefers-color-scheme: dark) {
-            #darkBtn {
-                display: none;
-            }
-        }
-        @media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
-            #lightBtn {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -153,14 +153,14 @@
         <ul>
             <li><a href="#how">How?</a></li>
             <li><a href="#more">More Styling</a></li>
-            <li><a href="#content3">Just Some Lipsum</a></li>
+            <li><a href="#a11y">Accessibility</a></li>
         </ul>
     </header>
     <main>
 
         <section id="how">
             <h2>How has this been done?</h2>
-            <p>Let me show you the important bits - this is the bare bones:</p>
+            <p>Here are the important bits - this is the bare bones, the styling is up to you:</p>
             <h3>HTML</h3>
 <pre>
 <i>// create the toggle buttons with onclick function calls</i>
@@ -174,38 +174,19 @@
 html {
   color-scheme: light dark;
 }
-
-<i>// initial state on load, dark mode = no dark-mode button</i>
-@media (prefers-color-scheme: dark) {
-  #darkBtn {
-    display: none;
-  }
-}
-<i>// initial state on load, light mode = no light-mode button</i>
-@media (prefers-color-scheme: light) {
-  #lightBtn {
-    display: none;
-  }
-}
 </pre>
-            <h3>JS</h3>
+            <h3>JavaScript</h3>
 <pre>
-<i>// first, some useful variables to neaten things up:</i>
+<i>// first, a useful variable to neaten things up:</i>
 const htmlRoot = document.querySelector("html");
-const lightButton = document.querySelector("#lightBtn");
-const darkButton = document.querySelector("#darkBtn");
 
 <i>// set color-scheme to dark and switch to light button</i>
 function switchDark() {
   htmlRoot.style.colorScheme = "dark";
-  lightButton.style.display = "initial";
-  darkButton.style.display = "none";
 }
 <i>// set color-scheme to light and switch to dark button</i>
 function switchLight() {
   htmlRoot.style.colorScheme = "light";
-  darkButton.style.display = "initial";
-  lightButton.style.display = "none";
 }
 </pre>
         </section>
@@ -214,7 +195,7 @@ function switchLight() {
             <h2>Want to do more styling?</h2>
 
             <h3>Easy hack</h3>
-            <p>Use transparency heavily, and you can style on top of dark or light colours without having to make your properties different, for light and dark mode. This can lead to muted outcomes, however.</p>
+            <p>Use transparency as I've done above, and you can style on top of dark or light colours without having to make your properties different, for light and dark mode. This can lead to muted outcomes, however.</p>
 
             <h3>Doing it "properly"</h3>
             
@@ -223,11 +204,12 @@ function switchLight() {
 
             <p>There are many ways to skin this particular cat. I'm basing this code on the idea that once people start toggling the dark/light option on the page, that they no longer want the Operating System to control it, so flipping the option in the OS then does nothing. However, I am also storing nothing, so a refresh of the page sets everything back to the OS setting as default.</p>
             <p>The logic gets a little more involved, now...</p>
-            <p>You'll need to put what you consider your non-default styles or custom properties into a new class - for me that's .dark-mode as I consider light to be the default.</p>
+            <p>You'll need to put what you consider your non-default styles or custom properties into a new class - for me that's <code>.dark-mode</code> as I consider light to be the default.</p>
 
             <h3>More JavaScript!</h3>
 <pre>
-<i>// NB! using the same variables as earlier:</i>
+<i>// the same variable as before:</i>
+const htmlRoot = document.querySelector("html");
 
 <i>// check for color-scheme on html element, if not set, then...</i>
 if (!htmlRoot.style.colorScheme) {
@@ -253,24 +235,19 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', eve
 });
 
 <i>// finally we add another line to each of our functions,
-// switchDark and switchLight, to include the mode changes
-// (I have used the variables to neaten up these too, here)</i>
+// switchDark and switchLight, to include the mode changes</i>
 function switchDark() {
   htmlRoot.style.colorScheme = "dark";
   htmlRoot.classList.add("dark-mode"); <i>// added</i>
-  lightButton.style.display = "initial";
-  darkButton.style.display = "none";
 }
 function switchLight() {
   htmlRoot.style.colorScheme = "light";
   htmlRoot.classList.remove("dark-mode"); <i>// added</i>
-  lightButton.style.display = "none";
-  darkButton.style.display = "initial";
 }
 </pre>
             <h3>CSS example</h3>
             <p>So whichever class you are now toggling into the html element with this new JavaScript, you can now use for styling for that mode.</p>
-            <p>Below is the CSS for what you saw above, the purple and yellow text/backgrounds. This is just an example, not ideal CSS - but do note that the .dark-mode selectors come <strong>after</strong> the light mode defaults!</p>
+            <p>Below is the CSS for what you saw above, the purple and yellow text/backgrounds. This is just an example, not ideal CSS - but do note that the <code>.dark-mode</code> selectors come <strong>after</strong> the light mode defaults!</p>
 <pre>
 .mode-styling {
   color: rebeccapurple;
@@ -297,25 +274,75 @@ div.mode-styling::after { content: " light mode" }
 </pre>
         </section>
 
-        <section id="content3">
-            <h2>Just some Lipsum</h2>
-            <div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit ullamcorper facilisis. Maecenas at hendrerit nisl, nec gravida eros. Praesent malesuada turpis at vehicula facilisis. Nunc nec enim laoreet, iaculis leo pharetra, porta nisi. Morbi in nunc orci. Nunc venenatis nec lectus non pulvinar. Vivamus vestibulum, velit at mattis ullamcorper, nulla ligula tincidunt ipsum, ut maximus lectus ante et ante. Nulla ac suscipit diam. Praesent euismod sapien id tristique condimentum. Etiam eget porta quam. Praesent fermentum tellus in turpis fermentum accumsan.
-                </p>
-                <p>
-                In lobortis odio turpis, at tincidunt enim feugiat et. Nulla bibendum urna vitae nunc semper mollis. Mauris pretium ipsum ac nibh mollis, ornare interdum nibh suscipit. Duis ultricies laoreet lacus, eget faucibus ligula porttitor id. Curabitur accumsan placerat urna quis facilisis. Mauris sem neque, ullamcorper non augue in, elementum pharetra tellus. Donec ullamcorper sapien at lobortis fringilla. Duis gravida ligula eget nibh mattis, eget tincidunt turpis porta. Duis efficitur, sapien id porttitor porta, sapien diam tristique sem, ut tristique ex nibh non nulla. Duis fringilla metus sed sapien varius imperdiet.
-                </p>
-                <p>
-                Pellentesque viverra placerat sapien, at gravida arcu mattis in. Maecenas elementum elit eget nisi semper, non hendrerit ipsum rhoncus. Nunc non ex vel est egestas luctus eget nec libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi venenatis elit vitae felis iaculis, id rhoncus tortor cursus. Nullam dignissim nisl eget erat rhoncus tempus. Suspendisse vulputate eleifend leo. Duis rhoncus dolor a lacus laoreet, ut suscipit nisl accumsan. In efficitur est nisi, et ornare lorem sodales quis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum facilisis quam eget ipsum dictum, ut luctus tellus mollis. Proin eu mi eu felis ultricies gravida. Nunc non lectus in erat cursus dapibus a id ante. Proin semper mollis tellus, sed auctor ante dapibus vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis urna velit, pulvinar eu efficitur sed, eleifend eget tellus.
-                </p>
-                <p>
-                Vestibulum hendrerit vitae nisi at vulputate. In euismod faucibus sem ut sagittis. Morbi magna metus, ullamcorper eget ex id, efficitur blandit ante. Morbi tincidunt purus vel quam dignissim, vel scelerisque augue gravida. Quisque vestibulum erat quis ligula hendrerit faucibus. In hac habitasse platea dictumst. Nam in efficitur nunc, ut consequat ipsum. Phasellus feugiat maximus interdum. Vivamus faucibus nisi sed neque ullamcorper, viverra molestie nunc ornare. In hac habitasse platea dictumst. Fusce ornare ultrices risus, pellentesque eleifend orci commodo gravida. Fusce posuere lectus a finibus hendrerit.
-                </p>
-                <p>
-                In sagittis erat a efficitur mattis. Morbi bibendum risus vel magna eleifend, at accumsan dolor ultrices. Ut dui turpis, condimentum quis libero at, ultricies sodales augue. Maecenas dapibus mauris nec enim tincidunt finibus. Nullam vehicula odio fringilla, blandit leo vitae, rhoncus ante. Etiam tristique nisl vel lorem mattis, et ornare arcu auctor. Phasellus mattis efficitur lorem, ut rhoncus metus rutrum elementum. In id libero sed nisi finibus accumsan.
-                </p>
-            </div>
+        <section id="a11y">
+            <h2>Make it Accessible</h2>
+            <h3>With Styling</h3>
+            <p>My first version of this page had the toggle button of the mode you were on disappear with <code>display: none;</code> - so when the page was dark, the dark button was no longer there. This was confusing and not great for screen readers, so now they're both there all the time, and button for the active mode looks depressed into the page.</p>
+            <p>This is actually relatively simple to do, given that you can call up the current background and text colours with <code>Canvas</code> and <code>CanvasText</code>, which flip along with the <code>color-scheme</code> setting:</p>
+
+            <h3>CSS</h3>
+<pre>
+<i>// the light button will have a dark inset shadow in light mode,
+// and a light inset shadow when the page is in dark mode </i>
+.mode-switcher #lightBtn {
+    box-shadow: 1px 1px 5px -1px CanvasText inset;
+}
+<i>// the dark button has the opposite :)</i>
+.mode-switcher #darkBtn {
+    box-shadow: 1px 1px 5px -1px Canvas inset;
+}
+</pre>
+
+            <h3>With ARIA</h3>
+            <p>Even better, you can announce to screen readers and other assistive technologies when a button has been pressed, making it much clearer what is going on.</p>
+            <p>We'll take the Javascript we've got so far and add some extra lines to write ARIA attributes into the <code>button</code> elements.</p>
+
+            <h3>Final Accessible JavaScript</h3>
+<pre>
+<i>// a couple more useful variables</i>    
+const htmlRoot = document.querySelector("html");
+<b>const lightButton = document.querySelector("#lightBtn");
+const darkButton = document.querySelector("#darkBtn");</b>
+
+if (!htmlRoot.style.colorScheme) {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        htmlRoot.classList.add("dark-mode");
+<b>        darkButton.setAttribute("aria-pressed", "true");
+        lightButton.setAttribute("aria-pressed", "false");
+    } else {
+        darkButton.setAttribute("aria-pressed", "false");
+        lightButton.setAttribute("aria-pressed", "true");
+    </b>}
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    if (!htmlRoot.style.colorScheme) {
+        if(event.matches) {
+            htmlRoot.classList.add("dark-mode");
+<b>            darkButton.setAttribute("aria-pressed", "true");
+            lightButton.setAttribute("aria-pressed", "false");</b>
+        } else {
+            htmlRoot.classList.remove("dark-mode");
+<b>            darkButton.setAttribute("aria-pressed", "false");
+            lightButton.setAttribute("aria-pressed", "true");</b>
+        }
+    }
+});
+
+function switchDark() {
+    htmlRoot.style.colorScheme = "dark";
+    htmlRoot.classList.add("dark-mode");
+<b>    darkButton.setAttribute("aria-pressed", "true");
+    lightButton.setAttribute("aria-pressed", "false");</b>
+}
+function switchLight() {
+    htmlRoot.style.colorScheme = "light";
+    htmlRoot.classList.remove("dark-mode");
+<b>    darkButton.setAttribute("aria-pressed", "false");
+    lightButton.setAttribute("aria-pressed", "true");</b>
+}
+</pre>
+
         </section>
     </main>
     <footer>
@@ -329,19 +356,24 @@ div.mode-styling::after { content: " light mode" }
         function switchDark() {
             htmlRoot.style.colorScheme = "dark";
             htmlRoot.classList.add("dark-mode");
-            lightButton.style.display = "initial";
-            darkButton.style.display = "none";
+            darkButton.setAttribute("aria-pressed", "true");
+            lightButton.setAttribute("aria-pressed", "false");
         }
         function switchLight() {
             htmlRoot.style.colorScheme = "light";
             htmlRoot.classList.remove("dark-mode");
-            darkButton.style.display = "initial";
-            lightButton.style.display = "none";
+            darkButton.setAttribute("aria-pressed", "false");
+            lightButton.setAttribute("aria-pressed", "true");
         }
         
         if (!htmlRoot.style.colorScheme) {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 htmlRoot.classList.add("dark-mode");
+                darkButton.setAttribute("aria-pressed", "true");
+                lightButton.setAttribute("aria-pressed", "false");
+            } else {
+                darkButton.setAttribute("aria-pressed", "false");
+                lightButton.setAttribute("aria-pressed", "true");
             }
         }
 
@@ -349,8 +381,12 @@ div.mode-styling::after { content: " light mode" }
             if (!htmlRoot.style.colorScheme) {
                 if(event.matches) {
                     htmlRoot.classList.add("dark-mode");
+                    darkButton.setAttribute("aria-pressed", "true");
+                    lightButton.setAttribute("aria-pressed", "false");
                 } else {
                     htmlRoot.classList.remove("dark-mode");
+                    darkButton.setAttribute("aria-pressed", "false");
+                    lightButton.setAttribute("aria-pressed", "true");
                 }
             }
         });
