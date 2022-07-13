@@ -154,6 +154,7 @@
             <li><a href="#how">How?</a></li>
             <li><a href="#more">More Styling</a></li>
             <li><a href="#a11y">Accessibility</a></li>
+            <li><a href="#limits">Limitations</a></li>
         </ul>
     </header>
     <main>
@@ -344,9 +345,15 @@ function switchLight() {
 </pre>
 
         </section>
+        <section id="limits">
+            <h2>Limitations</h2>
+            <p>As you can see, this is just one single page. Not even an SPA, just one page!</p>
+            <p>None of this code is storing preferences anywhere, so a refresh, or navigating away and back to this page, will reset the <code>color-scheme</code> mode back to one that matches the operating system of the user.</p>
+            <p>Currently, I feel that's OK! But this page may get expanded to elaborate on what the options are, in the case of a larger website with multiple pages :)</p>
+        </section>
     </main>
     <footer>
-        <p>Footer!</p>
+        <p>by <a href="https://www.sarawallen.com">Sara Wallén</a>, 2022</p>
     </footer>
     <script>
         const htmlRoot = document.querySelector("html");
