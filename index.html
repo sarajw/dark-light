@@ -238,11 +238,11 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', eve
 // switchDark and switchLight, to include the mode changes</i>
 function switchDark() {
   htmlRoot.style.colorScheme = "dark";
-  htmlRoot.classList.add("dark-mode"); <i>// added</i>
+  <b>htmlRoot.classList.add("dark-mode");</b>
 }
 function switchLight() {
   htmlRoot.style.colorScheme = "light";
-  htmlRoot.classList.remove("dark-mode"); <i>// added</i>
+  <b>htmlRoot.classList.remove("dark-mode");</b>
 }
 </pre>
             <h3>CSS example</h3>
